@@ -1,35 +1,39 @@
 const cron = require("node-cron");
 const axios = require("axios").default;
 const { ENDPOINT } = require("./env");
+const {getToken} = require("./token")
 
 let deviceStatus = "";
 let vnPayStatus = "";
 
-const getStatus = (accessToken) => {
-  cron.schedule("*/1 * * * * *", () => {
+const pingStatus = async () => {
+  const tokenData = await getToken();
     const url = `${ENDPOINT}/device/ping`;
     let config = {
       method: "get",
       maxBodyLength: Infinity,
       url: url,
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
+        'Authorization': `Bearer ${tokenData.data.token}`,
       },
     };
 
-    axios
+    return axios
       .request(config)
       .then((res) => {
-        console.log('ressssssssssss', res)
-        vnPayStatus = res.data.vnpayStatus;
-        deviceStatus = res.data.status;
+        return {
+          vnPayStatus: res.data.vnpayStatus,
+          deviceStatus: res.data.status
+        }
       })
       .catch((ers) => {
         console.log("GLOBAL ERROR", ers);
+        return null
       });
-  });
-};
+  // });
+}
 
 module.exports = {
-  getStatus,
-};
+  pingStatus
+}
+

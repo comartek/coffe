@@ -1,10 +1,12 @@
 const { POINT_OF_SALE, ENDPOINT, REQUEST_TIMEOUT } = require("./env");
-const { getStatus } = require("./ping");
+const { pingStatus } = require("./ping");
 const { HttpStatusCode } = require("axios");
 const { sendMoneySignal, sendStatusSignal } = require("./device");
 const { delayMs } = require("./utils");
 const { DEVICE_STATUS } = require("./constants");
+const { getToken  } = require("./token")
 const axios = require("axios").default;
+const cron = require("node-cron");
 
 // console.log(POINT_OF_SALE, ENDPOINT, REQUEST_TIMEOUT);
 // const POINT_OF_SALE = process.env.POINT_OF_SALE;
@@ -13,17 +15,13 @@ const axios = require("axios").default;
 
 let STATUS = "OK";
 
-let accessToken = "";
-
-async function login() {
-  const url = `${ENDPOINT}/device/login`;
-  const res = await axios.post(url, { code: "123", secretKey: "15qx8q6qfoj8" });
-  accessToken = res.data.token;
-  getStatus(res.data.token);
-}
+let accessToken = ''
 
 async function main() {
-  await login();
+  await getToken().then((res) => {
+    accessToken = res.data.token
+  })
+
   const isSuccess = await handlePayment();
   console.log("isSuccess", isSuccess);
   // while (1) {
@@ -34,7 +32,16 @@ async function main() {
   //     console.log("GLOBAL ERROR", error);
   //   }
   // }
+
+  cron.schedule("* * * * * *", async () => { 
+    const data = await pingStatus()
+      console.log('aaaaaaaaaaaaaaass', data)
+  })
 }
+
+
+
+
 
 const handlePayment = async () => {
   try {
