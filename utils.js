@@ -1,5 +1,6 @@
-const fs = require('fs');
-const {join} = require('path');
+const fs = require("fs");
+const { join } = require("path");
+const dayjs = require("dayjs");
 
 const delayMs = (ms = 1000) => {
   return new Promise((rs) => {
@@ -11,21 +12,50 @@ const delayMs = (ms = 1000) => {
 
 const nowInSeconds = () => {
   return Math.round(Date.now() / 1_000);
-}
+};
 
 const floorAmountBy1K = (amount) => {
   return Math.floor(amount / 1000);
 };
 
 const writeErrorLog = (log) => {
-  fs.appendFileSync(join(process.cwd(),'logs/20230919.error.log'), `${log}\r\n`);
-}
+  const now = Date.now();
+  if (log.code === "ENOTFOUND") {
+    fs.appendFileSync(
+      join(process.cwd(), `logs/${dayjs(now).format("DDMMYYYY")}.error.log`),
+      `Time: ${dayjs(now).format("DD-MM-YYYY HH:mm:ss")} CODE: ${
+        log.code
+      } Message: No internet\r\n`
+    );
+  }
+  if (log.response) {
+    fs.appendFileSync(
+      join(process.cwd(), `logs/${dayjs(now).format("DDMMYYYY")}.error.log`),
+      `Time: ${dayjs(now).format("DD-MM-YYYY HH:mm:ss")} STATUS: ${
+        log.response.status
+      } STATUS TEXT: ${log.response.statusText} Message: ${
+        log.response.data.message
+      }\r\n`
+    );
+  }
+};
 
-writeErrorLog('xxxx');
+const writeSuccessLog = (id, amount) => {
+  const now = Date.now();
+  if (id) {
+    fs.appendFileSync(
+      join(process.cwd(), `logs/${dayjs(now).format("DDMMYYYY")}.log`),
+      `Time: ${dayjs(now).format(
+        "DD-MM-YYYY HH:mm:ss"
+      )} Id: ${id} Amount: ${amount}\r\n`
+    );
+  }
+};
 
 module.exports = {
   delayMs,
   nowInSeconds,
   floorAmountBy1K,
   writeErrorLog,
+  writeSuccessLog,
 };

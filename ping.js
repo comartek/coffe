@@ -21,10 +21,12 @@ const pingStatus = async () => {
   };
 
   const res = await axios.request(config);
-  return {
-    vnPayStatus: res.data.vnpayStatus,
-    deviceStatus: res.data.status,
-  };
+  if (res.data) {
+    return {
+      vnPayStatus: res.data.vnpayStatus,
+      deviceStatus: res.data.status,
+    };
+  }
 };
 
 cron
