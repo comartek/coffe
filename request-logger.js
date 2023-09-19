@@ -1,7 +1,9 @@
 const axios = require("axios").default;
 
 axios.interceptors.request.use(
-  function (config) {},
+  function (config) {
+    return config;
+  },
   function (error) {
     // log lỗi vào file theo định dạng
 

@@ -28,6 +28,7 @@ const writeErrorLog = (log) => {
       } Message: No internet\r\n`
     );
   }
+
   if (log.response) {
     fs.appendFileSync(
       join(process.cwd(), `logs/${dayjs(now).format("DDMMYYYY")}.error.log`),
@@ -40,14 +41,15 @@ const writeErrorLog = (log) => {
   }
 };
 
-const writeSuccessLog = (id, amount) => {
-  const now = Date.now();
+const writeSuccessLog = (log) => {
+  const time = dayjs().format(
+    "DD-MM-YYYY HH:mm:ss"
+  );
+
+  const pathToLogFile = join(process.cwd(), `logs/${dayjs(now).format("DDMMYYYY")}.log`);
   if (id) {
     fs.appendFileSync(
-      join(process.cwd(), `logs/${dayjs(now).format("DDMMYYYY")}.log`),
-      `Time: ${dayjs(now).format(
-        "DD-MM-YYYY HH:mm:ss"
-      )} Id: ${id} Amount: ${amount}\r\n`
+      pathToLogFile, `${time} ${log}\r\n`
     );
   }
 };

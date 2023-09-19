@@ -30,9 +30,10 @@ const pingStatus = async () => {
 };
 
 cron
-  .schedule("* * * * * *", async () => {
-    console.log("start ping");
+  .schedule("*/5 * * * * *", async () => {
+    console.log("start ping x");
     const data = await pingStatus();
+    console.log(data);
     deviceStatus = data.deviceStatus;
     vnPayStatus = data.vnPayStatus;
     console.log("PING:", deviceStatus, vnPayStatus);
