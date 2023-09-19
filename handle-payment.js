@@ -18,9 +18,7 @@ async function main() {
     try {
       const isSuccess = await handlePayment();
       if (!isSuccess) await delayMs(REQUEST_TIMEOUT);
-    } catch (error) {
-      writeErrorLog(error);
-    }
+    } catch (error) {}
   }
 }
 
@@ -44,8 +42,11 @@ const waitForPayment = async () => {
       sendMoneySignal(val);
       return res.data;
     }
+    writeSuccessLog(`Id: ${res.data.id} Amount: ${res.data.amount}`);
   } catch (error) {
-    writeErrorLog(error);
+    writeErrorLog(
+      `Code: ${error.response.data.statusCode} Message: ${error.response.data.message}`
+    );
   }
 
   return 0;
@@ -65,10 +66,12 @@ const claimTransaction = async (data) => {
         },
       }
     );
-    writeSuccessLog(data.id, data.amount);
+    writeSuccessLog(`Id: ${data.id} Amount: ${data.amount}`);
     return true;
   } catch (error) {
-    writeErrorLog(error);
+    writeErrorLog(
+      `Code: ${error.response.data.statusCode} Message: ${error.response.data.message}`
+    );
     return false;
   }
 };

@@ -19,39 +19,25 @@ const floorAmountBy1K = (amount) => {
 };
 
 const writeErrorLog = (log) => {
-  const now = Date.now();
-  if (log.code === "ENOTFOUND") {
-    fs.appendFileSync(
-      join(process.cwd(), `logs/${dayjs(now).format("DDMMYYYY")}.error.log`),
-      `Time: ${dayjs(now).format("DD-MM-YYYY HH:mm:ss")} CODE: ${
-        log.code
-      } Message: No internet\r\n`
-    );
-  }
+  const time = dayjs().format("DD-MM-YYYY HH:mm:ss");
 
-  if (log.response) {
-    fs.appendFileSync(
-      join(process.cwd(), `logs/${dayjs(now).format("DDMMYYYY")}.error.log`),
-      `Time: ${dayjs(now).format("DD-MM-YYYY HH:mm:ss")} STATUS: ${
-        log.response.status
-      } STATUS TEXT: ${log.response.statusText} Message: ${
-        log.response.data.message
-      }\r\n`
-    );
-  }
+  const pathToLogFile = join(
+    process.cwd(),
+    `logs/${dayjs().format("DDMMYYYY")}.error.log`
+  );
+
+  fs.appendFileSync(pathToLogFile, `${time} ${log}\r\n`);
 };
 
 const writeSuccessLog = (log) => {
-  const time = dayjs().format(
-    "DD-MM-YYYY HH:mm:ss"
+  const time = dayjs().format("DD-MM-YYYY HH:mm:ss");
+
+  const pathToLogFile = join(
+    process.cwd(),
+    `logs/${dayjs().format("DDMMYYYY")}.log`
   );
 
-  const pathToLogFile = join(process.cwd(), `logs/${dayjs(now).format("DDMMYYYY")}.log`);
-  if (id) {
-    fs.appendFileSync(
-      pathToLogFile, `${time} ${log}\r\n`
-    );
-  }
+  fs.appendFileSync(pathToLogFile, `${time} ${log}\r\n`);
 };
 
 module.exports = {
