@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "build": "esbuild index.js --bundle --outfile=out.js --platform=node"
+    "build": "esbuild index.js --bundle --outfile=out.js --platform=node --packages=external"
   },
   "dependencies": {
     "axios": "^1.5.0",
