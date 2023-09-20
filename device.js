@@ -2,7 +2,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
-// const rpio = require("rpio");
+const rpio = require("rpio");
 
 const PIN = 12;
 const PULSE_WIDTH = 25; // ms
@@ -19,20 +19,20 @@ const sendStatusSignal = (status) => {
 
 const sendMoneySignal = async (val) => {
   console.log("val=>>>>>>>>>>>>>>>>>>>", val);
-  // console.log("Send money signal", val);
-  // for (let i = 0; i < val; i++) {
-  //   rpio.open(PIN, rpio.OUTPUT, rpio.LOW);
+  rpio.mode(PIN, rpio.OUTPUT);
+  rpio.msleep(TIMEOUT_TO_END_COMMAND);
 
-  //   rpio.msleep(PULSE_WIDTH * 4);
+  for (let i = 0; i < val; i++) {
+    rpio.open(PIN, rpio.OUTPUT, rpio.LOW);
+    rpio.msleep(PULSE_WIDTH * 4);
 
-  //   rpio.open(PIN, rpio.OUTPUT, rpio.HIGH);
-
-  //   rpio.msleep(PULSE_WIDTH);
-  // }
-
-  // rpio.msleep(TIMEOUT_TO_END_COMMAND);
-
-  // rpio.open(PIN, rpio.OUTPUT, rpio.LOW);
+    rpio.open(PIN, rpio.OUTPUT, rpio.HIGH);
+    rpio.msleep(PULSE_WIDTH);
+  }
+  rpio.open(PIN, rpio.OUTPUT, rpio.LOW);
+  rpio.msleep(TIMEOUT_TO_END_COMMAND);
+  
+  rpio.mode(PIN, rpio.INPUT, rpio.PULL_OFF);
 };
 
 module.exports = {

@@ -77,9 +77,14 @@ const claimTransaction = async (data) => {
 };
 
 const handlePayment = async () => {
-  const data = await waitForPayment();
-  if (data.id) {
-    await claimTransaction(data);
+  try {
+    const data = await waitForPayment();
+    if (data.id) {
+      await claimTransaction(data);
+      return true;
+    }
+  } catch (error) {
+    return false;
   }
 };
 
