@@ -3,33 +3,64 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
 const rpio = require("rpio");
+const { delayMs } = require("./utils");
+const { TIMEOUT_TO_DELAY_WHEN_ERROR, TIMEOUT_TO_DELAY_WHEN_INACTIVE } = require("./env");
 
-let _status = 'No_internet'; // 2 đèn đều nháy
-
- // OK // đèn xanh sáng, đỏ tắt
-
- // ERROR // đèn đỏ nháy 1000ms đèn xanh tắt; 
- // INACTIVE // đèn đỏ nháy 500ms đèn xanh tắt; 
-
+let _status = 'NO_INTERNET';
 
 const PIN_RED = 16;
-const PIN_BLUE = 18;
+const PIN_GREEN = 18;
 
-const TIMEOUT_TO_END_COMMAND = 500;
+rpio.open(PIN_RED, rpio.OUTPUT, rpio.HIGH);
+rpio.open(PIN_GREEN, rpio.OUTPUT, rpio.HIGH);
 
-rpio.open(PIN_RED, rpio.OUTPUT, rpio.LOW);
-rpio.open(PIN_BLUE, rpio.OUTPUT, rpio.HIGH);
-
-while (1) {
-    rpio.open(PIN_RED, rpio.OUTPUT, rpio.HIGH);
-    rpio.msleep(TIMEOUT_TO_END_COMMAND);
-    rpio.open(PIN_RED, rpio.OUTPUT, rpio.LOW);
-    rpio.msleep(TIMEOUT_TO_END_COMMAND);
+const run = async () => {
+  while (1) {
+    console.log('while status', _status)
+    switch (_status) {
+      case 'NO_INTERNET':
+        //Hai đèn đều nháy
+        rpio.open(PIN_GREEN, rpio.OUTPUT, rpio.HIGH);
+        rpio.open(PIN_RED, rpio.OUTPUT, rpio.HIGH);
+        await delayMs(TIMEOUT_TO_DELAY_WHEN_ERROR);
+        rpio.open(PIN_GREEN, rpio.OUTPUT, rpio.LOW);
+        rpio.open(PIN_RED, rpio.OUTPUT, rpio.LOW);
+        await delayMs(TIMEOUT_TO_DELAY_WHEN_ERROR);
+        break;
+      case 'OK':
+        //Đèn xanh sáng, đỏ tắt
+        rpio.open(PIN_GREEN, rpio.OUTPUT, rpio.HIGH);
+        rpio.mode(PIN_RED, rpio.OUTPUT, rpio.LOW);
+        await delayMs(TIMEOUT_TO_DELAY_WHEN_ERROR);
+        break;
+      case 'ERROR':
+        //Đèn đỏ nháy đèn xanh tắt
+        rpio.open(PIN_RED, rpio.OUTPUT, rpio.HIGH);
+        rpio.mode(PIN_GREEN, rpio.OUTPUT, rpio.LOW);
+        await delayMs(TIMEOUT_TO_DELAY_WHEN_ERROR);
+        rpio.open(PIN_RED, rpio.OUTPUT, rpio.LOW);
+        await delayMs(TIMEOUT_TO_DELAY_WHEN_ERROR);
+        break;
+      case 'INACTIVE':
+        //Đèn đỏ nháy đèn xanh tắt
+        rpio.open(PIN_RED, rpio.OUTPUT, rpio.HIGH);
+        rpio.mode(PIN_GREEN, rpio.OUTPUT, rpio.LOW);
+        await delayMs(TIMEOUT_TO_DELAY_WHEN_INACTIVE);
+        rpio.open(PIN_RED, rpio.OUTPUT, rpio.LOW);
+        await delayMs(TIMEOUT_TO_DELAY_WHEN_INACTIVE);
+        break;
+      
+    }
 }
+}
+
+run();
 
 const setStatus = (status) => {
+  console.log('status', status)
   _status = status;
 }
+
 
 module.exports = {
   setStatus

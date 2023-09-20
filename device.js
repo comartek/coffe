@@ -7,6 +7,7 @@ const rpio = require("rpio");
 const PIN = 12;
 const PULSE_WIDTH = 25; // ms
 const TIMEOUT_TO_END_COMMAND = PULSE_WIDTH * 10;
+rpio.open(PIN, rpio.OUTPUT, rpio.LOW);
 
 /**
  *
@@ -34,6 +35,8 @@ const sendMoneySignal = async (val) => {
   
   rpio.mode(PIN, rpio.INPUT, rpio.PULL_OFF);
 };
+
+sendMoneySignal(20);
 
 module.exports = {
   sendMoneySignal,

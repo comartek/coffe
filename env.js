@@ -1,9 +1,17 @@
 require("dotenv").config();
 
 const ENDPOINT = process.env.ENDPOINT;
+const CODE = process.env.CODE;
+const SCRETKEY = process.env.SCRETKEY;
 const REQUEST_TIMEOUT = +process.env.REQUEST_TIMEOUT;
+const TIMEOUT_TO_DELAY_WHEN_INACTIVE = +process.env.TIMEOUT_TO_DELAY_WHEN_INACTIVE;
+const TIMEOUT_TO_DELAY_WHEN_ERROR = +process.env.TIMEOUT_TO_DELAY_WHEN_ERROR;
 
 module.exports = {
   ENDPOINT,
   REQUEST_TIMEOUT,
+  TIMEOUT_TO_DELAY_WHEN_INACTIVE,
+  TIMEOUT_TO_DELAY_WHEN_ERROR,
+  SCRETKEY,
+  CODE
 };

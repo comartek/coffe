@@ -3,6 +3,7 @@ const axios = require("axios").default;
 const { ENDPOINT } = require("./env");
 const { getToken } = require("./token");
 const { writeErrorLog, writeSuccessLog } = require("./utils");
+const { setStatus } = require('./led-status')
 
 let deviceStatus = "";
 let vnPayStatus = "";
@@ -21,31 +22,42 @@ const pingStatus = async () => {
     },
   };
 
-  try {
     const res = await axios.request(config);
     if (res.data) {
-      writeSuccessLog(
-        `Status: ${res.data.status} VnPayStatus: ${res.data.vnpayStatus} `
-      );
       return {
         vnPayStatus: res.data.vnpayStatus,
         deviceStatus: res.data.status,
       };
     }
-  } catch (error) {
-    writeErrorLog(
-      `Code: ${error.response.data.statusCode} Message: ${error.response.data.message}`
-    );
-  }
 };
 
 cron
   .schedule("*/5 * * * * *", async () => {
-    console.log("start ping x");
-    const data = await pingStatus();
-    deviceStatus = data.deviceStatus;
-    vnPayStatus = data.vnPayStatus;
-    console.log("PING:", deviceStatus, vnPayStatus);
+    try {
+      const data = await pingStatus();
+      deviceStatus = data.deviceStatus;
+      vnPayStatus = data.vnPayStatus;
+
+      if (data) {
+        writeSuccessLog(
+          `Status: ${deviceStatus} VnPayStatus: ${vnPayStatus} `
+          );
+      }
+      if (vnPayStatus === 'ERROR') {
+        setStatus('ERROR')
+      } else if (deviceStatus === 'INACTIVE') {
+        setStatus('INACTIVE')
+      }else  {
+        setStatus('OK')
+      }
+    } catch (error) {
+      if(error.code !== 'EAI_AGAIN'){
+        setStatus('ERROR')
+      }
+      writeErrorLog(
+        `Code: ${error?.response?.data?.statusCode} Message: ${error?.response?.data?.message}`
+      );
+    }
   })
   .start();
 

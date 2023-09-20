@@ -10,6 +10,7 @@ const {
 const { DEVICE_STATUS } = require("./constants");
 const { getToken } = require("./token");
 const axios = require("axios").default;
+const { setStatus } = require("./led-status");
 
 let STATUS = "OK";
 
@@ -44,8 +45,9 @@ const waitForPayment = async () => {
     }
     writeSuccessLog(`Id: ${res.data.id} Amount: ${res.data.amount}`);
   } catch (error) {
+    setStatus('ERROR')
     writeErrorLog(
-      `Code: ${error.response.data.statusCode} Message: ${error.response.data.message}`
+      `Code: ${error?.response?.data?.statusCode} Message: ${error?.response?.data?.message}`
     );
   }
 
@@ -69,8 +71,9 @@ const claimTransaction = async (data) => {
     writeSuccessLog(`Id: ${data.id} Amount: ${data.amount}`);
     return true;
   } catch (error) {
+    setStatus('ERROR')
     writeErrorLog(
-      `Code: ${error.response.data.statusCode} Message: ${error.response.data.message}`
+      `Code: ${error?.response?.data?.statusCode} Message: ${error?.response?.data?.message}`
     );
     return false;
   }
