@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "build": "esbuild index.js --bundle --outfile=out.js --platform=node --packages=external"
+    "es:build": "esbuild index.js --bundle --outfile=_out.js --platform=node --packages=external",
+    "build": "npm run es:build && javascript-obfuscator _out.js --compact true --output app.js"
   },
   "dependencies": {
     "axios": "^1.5.0",
@@ -16,6 +17,7 @@
     "rpio": "^2.4.2"
   },
   "devDependencies": {
-    "esbuild": "^0.19.3"
+    "esbuild": "^0.19.3",
+    "javascript-obfuscator": "^4.1.0"
   }
 }
