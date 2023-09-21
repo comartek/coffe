@@ -1,4 +1,4 @@
-const { ENDPOINT, CODE, SCRETKEY } = require("./env");
+const { ENDPOINT, CODE, FUNC_KEY, VERSION } = require("./env");
 const { nowInSeconds } = require("./utils");
 const axios = require("axios").default;
 
@@ -11,15 +11,16 @@ const getToken = async () => {
     return token;
   }
 
-  const url = `${ENDPOINT}/device/login`;
+  const url = `${ENDPOINT}/device/v1/login`;
+  const res = await axios.post(url, {
+    code: CODE,
+    key: FUNC_KEY(),
+    version: VERSION,
+  });
 
-    const res = await axios.post(url, {
-      code: CODE,
-      secretKey: SCRETKEY,
-    });
-    token = res.data.token;
-    expiresAt = now + 30 * 60;
-    return token;
+  token = res.data.token;
+  expiresAt = now + 30 * 60;
+  return token;
 };
 
 module.exports = {

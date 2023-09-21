@@ -16,7 +16,6 @@ rpio.open(PIN_GREEN, rpio.OUTPUT, rpio.HIGH);
 
 const run = async () => {
   while (1) {
-    console.log('while status', _status)
     switch (_status) {
       case 'NO_INTERNET':
         //Hai đèn đều nháy
@@ -57,7 +56,7 @@ const run = async () => {
 run();
 
 const setStatus = (status) => {
-  console.log('status', status)
+  console.log('CHANGE STATUS:', status)
   _status = status;
 }
 

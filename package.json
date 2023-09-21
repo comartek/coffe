@@ -12,6 +12,7 @@
     "axios": "^1.5.0",
     "dayjs": "^1.11.9",
     "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.2",
     "mkdirp": "^3.0.1",
     "node-cron": "^3.0.2",
     "node-machine-id": "^1.1.12",

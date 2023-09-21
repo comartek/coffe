@@ -1,51 +1,35 @@
 require("dotenv").config();
-const {machineIdSync} = require('node-machine-id');
-const crypto = require('crypto');
+const { machineIdSync } = require("node-machine-id");
+const jwt = require("jsonwebtoken");
 
 const machineId = machineIdSync();
-const buffMachineId = Buffer.from(machineId, 'hex');
-const CODE = buffMachineId.toString('base64url');
+const buffMachineId = Buffer.from(machineId, "hex");
 
-function generatePass(){
-  const secret_key = '+HW5jB8"]!xD';
-  const key = crypto
-  .createHash('sha512')
-  .update(secret_key)
-  .digest('hex')
-  .substring(0, 32)
+const VERSION = "0.1";
+const SECRET = "omupfsvmek";
 
-  const secret_iv = 'okeh{Thf#Azl';
-  const encryptionIV = crypto
-  .createHash('sha512')
-  .update(secret_iv)
-  .digest('hex')
-  .substring(0, 16)
-  
-  const cipher = crypto.createCipheriv('aes-256-cbc', key, encryptionIV)
-
-  const pass = Buffer.from(
-    cipher.update(CODE, 'utf8', 'hex') + cipher.final('hex')
-  ).toString('base64') 
-
-  return {
-    pass,
-    ver: '0.1'
+const CODE = buffMachineId.toString("base64url");
+const FUNC_KEY = () => jwt.sign(
+  {
+    code: CODE,
+  },
+  SECRET,
+  {
+    expiresIn: 50,
   }
-}
+);
 
-const SECRET = generatePass();
-
-const ENDPOINT = process.env.ENDPOINT;
-const SCRETKEY = process.env.SCRETKEY;
-const REQUEST_TIMEOUT = +process.env.REQUEST_TIMEOUT;
-const TIMEOUT_TO_DELAY_WHEN_INACTIVE = +process.env.TIMEOUT_TO_DELAY_WHEN_INACTIVE;
-const TIMEOUT_TO_DELAY_WHEN_ERROR = +process.env.TIMEOUT_TO_DELAY_WHEN_ERROR;
+const ENDPOINT = "https://api-cafe.viziple.com";
+const REQUEST_TIMEOUT = 3000;
+const TIMEOUT_TO_DELAY_WHEN_ERROR = 500;
+const TIMEOUT_TO_DELAY_WHEN_INACTIVE = 250;
 
 module.exports = {
+  VERSION,
   ENDPOINT,
   REQUEST_TIMEOUT,
   TIMEOUT_TO_DELAY_WHEN_INACTIVE,
   TIMEOUT_TO_DELAY_WHEN_ERROR,
-  SCRETKEY,
-  CODE
+  FUNC_KEY,
+  CODE,
 };

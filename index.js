@@ -1,3 +1,3 @@
-require('./request-logger');
-require('./ping');
-require('./handle-payment');
+require("./request-logger");
+require("./ping");
+require("./handle-payment");

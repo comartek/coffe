@@ -45,7 +45,7 @@ const waitForPayment = async () => {
     }
     writeSuccessLog(`Id: ${res.data.id} Amount: ${res.data.amount}`);
   } catch (error) {
-    setStatus('ERROR')
+    setStatus("ERROR");
     writeErrorLog(
       `Code: ${error?.response?.data?.statusCode} Message: ${error?.response?.data?.message}`
     );
@@ -71,7 +71,7 @@ const claimTransaction = async (data) => {
     writeSuccessLog(`Id: ${data.id} Amount: ${data.amount}`);
     return true;
   } catch (error) {
-    setStatus('ERROR')
+    setStatus("ERROR");
     writeErrorLog(
       `Code: ${error?.response?.data?.statusCode} Message: ${error?.response?.data?.message}`
     );
