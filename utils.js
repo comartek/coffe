@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { join } = require("path");
 const dayjs = require("dayjs");
+const mkdirp = require('mkdirp');
 
 const delayMs = (ms = 1000) => {
   return new Promise((rs) => {
@@ -17,6 +18,11 @@ const nowInSeconds = () => {
 const floorAmountBy1K = (amount) => {
   return Math.floor(amount / 1000);
 };
+
+
+// make logs directory
+const pathToLogDirectory = join(process.cwd(), 'logs');
+mkdirp.mkdirpSync(pathToLogDirectory);
 
 const writeErrorLog = (log) => {
   const time = dayjs().format("DD-MM-YYYY HH:mm:ss");
