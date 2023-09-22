@@ -26,6 +26,8 @@ const writeErrorLog = (log) => {
     `logs/${dayjs().format("DDMMYYYY")}.error.log`
   );
 
+  console.error(log);
+
   fs.appendFileSync(pathToLogFile, `${time} ${log}\r\n`);
 };
 
@@ -36,6 +38,8 @@ const writeSuccessLog = (log) => {
     process.cwd(),
     `logs/${dayjs().format("DDMMYYYY")}.log`
   );
+
+  console.info(log);
 
   fs.appendFileSync(pathToLogFile, `${time} ${log}\r\n`);
 };
