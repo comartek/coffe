@@ -22,7 +22,7 @@ const singleGetToken = async () => {
 
 // auto refresh token
 cron
-  .schedule("* */10 * * * *", async () => {
+  .schedule("0 */10 * * * *", async () => {
     try {
       await singleGetToken();
     } catch (error) {
