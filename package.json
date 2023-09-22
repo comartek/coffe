@@ -9,6 +9,7 @@
     "build": "npm run es:build && javascript-obfuscator dist/out.js --compact true --output ../coffee-app/app.js && rm dist/out.js"
   },
   "dependencies": {
+    "async-mutex": "^0.4.0",
     "axios": "^1.5.0",
     "dayjs": "^1.11.9",
     "dotenv": "^16.3.1",

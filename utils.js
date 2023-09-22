@@ -1,7 +1,5 @@
-const fs = require("fs");
 const { join } = require("path");
-const dayjs = require("dayjs");
-const mkdirp = require('mkdirp');
+const mkdirp = require("mkdirp");
 
 const delayMs = (ms = 1000) => {
   return new Promise((rs) => {
@@ -19,35 +17,22 @@ const floorAmountBy1K = (amount) => {
   return Math.floor(amount / 1000);
 };
 
-
 // make logs directory
-const pathToLogDirectory = join(process.cwd(), 'logs');
+const pathToLogDirectory = join(process.cwd(), "logs");
 mkdirp.mkdirpSync(pathToLogDirectory);
 
-const writeErrorLog = (log) => {
-  const time = dayjs().format("DD-MM-YYYY HH:mm:ss");
-
-  const pathToLogFile = join(
-    process.cwd(),
-    `logs/${dayjs().format("DDMMYYYY")}.error.log`
-  );
-
+const writeErrorLog = (error) => {
   console.error(log);
-
-  fs.appendFileSync(pathToLogFile, `${time} ${log}\r\n`);
 };
 
 const writeSuccessLog = (log) => {
-  const time = dayjs().format("DD-MM-YYYY HH:mm:ss");
-
-  const pathToLogFile = join(
-    process.cwd(),
-    `logs/${dayjs().format("DDMMYYYY")}.log`
-  );
-
   console.info(log);
+};
 
-  fs.appendFileSync(pathToLogFile, `${time} ${log}\r\n`);
+const parseJwt = (token) => {
+  var base64Payload = token.split(".")[1];
+  var payload = Buffer.from(base64Payload, "base64");
+  return JSON.parse(payload.toString());
 };
 
 module.exports = {
@@ -56,4 +41,5 @@ module.exports = {
   floorAmountBy1K,
   writeErrorLog,
   writeSuccessLog,
+  parseJwt,
 };

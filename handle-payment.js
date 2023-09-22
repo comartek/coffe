@@ -1,16 +1,11 @@
 const { ENDPOINT, REQUEST_TIMEOUT } = require("./env");
 const { HttpStatusCode } = require("axios");
 const { sendMoneySignal, sendStatusSignal } = require("./device");
-const {
-  delayMs,
-  floorAmountBy1K,
-  writeErrorLog,
-  writeSuccessLog,
-} = require("./utils");
+const { delayMs, floorAmountBy1K, writeSuccessLog } = require("./utils");
 const { DEVICE_STATUS } = require("./constants");
 const { getToken } = require("./token");
+const { get, post } = require("./api");
 const axios = require("axios").default;
-const { setStatus } = require("./led-status");
 
 let STATUS = "OK";
 
@@ -28,53 +23,28 @@ async function main() {
  * @returns id of the transaction
  */
 const waitForPayment = async () => {
-  const token = await getToken();
   const url = `${ENDPOINT}/device/waiting-trans`;
+  const res = await get(url);
 
-  try {
-    const res = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    // console.log('PAYMENT', res.data);
-    const val = floorAmountBy1K(res?.data?.amount);
-    if (val > 0) {
-      sendMoneySignal(val);
-      return res.data;
-    }
-    writeSuccessLog(`Id: ${res.data.id} Amount: ${res.data.amount}`);
-  } catch (error) {
-    setStatus("ERROR");
-    writeErrorLog(
-      `Code: ${error?.response?.data?.statusCode} Message: ${error?.response?.data?.message}`
-    );
+  const val = floorAmountBy1K(res?.data?.amount);
+  if (val > 0) {
+    sendMoneySignal(val);
+    return res.data;
   }
+
+  writeSuccessLog(`Id: ${res.data.id} Amount: ${res.data.amount}`);
 
   return 0;
 };
 
 const claimTransaction = async (data) => {
-  const token = await getToken();
   const url = `${ENDPOINT}/device/transaction/claim`;
 
   try {
-    const res = await axios.post(
-      url,
-      { id: data.id },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    await post(url, { id: data.id });
     writeSuccessLog(`Id: ${data.id} Amount: ${data.amount}`);
     return true;
   } catch (error) {
-    setStatus("ERROR");
-    writeErrorLog(
-      `Code: ${error?.response?.data?.statusCode} Message: ${error?.response?.data?.message}`
-    );
     return false;
   }
 };
