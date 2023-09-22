@@ -36,7 +36,6 @@ const sendMoneySignal = async (val) => {
   rpio.mode(PIN, rpio.INPUT, rpio.PULL_OFF);
 };
 
-sendMoneySignal(20);
 
 module.exports = {
   sendMoneySignal,

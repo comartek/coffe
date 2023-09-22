@@ -38,7 +38,9 @@ cron
       } else {
         setStatus("OK");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   })
   .start();
 

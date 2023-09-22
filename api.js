@@ -1,3 +1,4 @@
+const cron = require("node-cron");
 const { default: axios } = require("axios");
 const { writeErrorLog } = require("./utils");
 const { getToken } = require("./token");
@@ -19,10 +20,24 @@ const singleGetToken = async () => {
   }
 };
 
+// auto refresh token
+cron
+  .schedule("* */10 * * * *", async () => {
+    try {
+      await singleGetToken();
+    } catch (error) {
+      writeErrorLog(error)
+    }
+  })
+  .start();
+
 const get = async (url, requiredAuth = true) => {
   const request = async () => {
     const headers = {};
     if (requiredAuth) {
+      if (_token === "") {
+        await singleGetToken()
+      }
       headers.Authorization = `Bearer ${_token}`;
     }
     return axios.get(url, {
@@ -35,7 +50,7 @@ const get = async (url, requiredAuth = true) => {
     const data = await request();
     return data;
   } catch (error) {
-    if ((error.response.status = 401)) {
+    if ((error?.response?.status == 401)) {
       if (!mutex.isLocked()) {
         await singleGetToken();
       } else {
@@ -53,6 +68,9 @@ const post = async (url, data = {}, requiredAuth = true) => {
   const request = async () => {
     const headers = {};
     if (requiredAuth) {
+      if (_token === "") {
+        await singleGetToken()
+      }
       headers.Authorization = `Bearer ${_token}`;
     }
     return axios.post(url, data, {
@@ -64,10 +82,11 @@ const post = async (url, data = {}, requiredAuth = true) => {
     await mutex.waitForUnlock();
     return request();
   } catch (error) {
-    if ((error.response.statusCode = 401)) {
+    if ((error?.response?.status == 401)) {
       await singleGetToken();
       return request();
     }
+    throw error;
   }
 };
 

@@ -22,7 +22,7 @@ const pathToLogDirectory = join(process.cwd(), "logs");
 mkdirp.mkdirpSync(pathToLogDirectory);
 
 const writeErrorLog = (error) => {
-  console.error(log);
+  console.error(error);
 };
 
 const writeSuccessLog = (log) => {
