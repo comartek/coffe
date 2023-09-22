@@ -1,14 +1,12 @@
 require("dotenv").config();
-const { machineIdSync } = require("node-machine-id");
 const jwt = require("jsonwebtoken");
-
-const machineId = machineIdSync();
-const buffMachineId = Buffer.from(machineId, "hex");
+const { getDeviceCode } = require("./make-device-code");
 
 const VERSION = "0.1";
 const SECRET = "omupfsvmek";
 
-const CODE = buffMachineId.toString("base64url");
+const CODE = getDeviceCode();
+
 const FUNC_KEY = () => jwt.sign(
   {
     code: CODE,
