@@ -53,9 +53,7 @@ const post = async (url, data = {}, requiredAuth = true) => {
   const request = async () => {
     const headers = {};
     if (requiredAuth) {
-      headers = {
-        Authorization: `Bearer ${_token}`,
-      };
+      headers.Authorization = `Bearer ${_token}`;
     }
     return axios.post(url, data, {
       headers,
