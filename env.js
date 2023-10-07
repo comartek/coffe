@@ -2,7 +2,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const { getDeviceCode } = require("./make-device-code");
 
-const VERSION = "0.1";
+const VERSION = "0.1.10";
 const SECRET = "omupfsvmek";
 
 const CODE = getDeviceCode();

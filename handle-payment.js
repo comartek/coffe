@@ -30,6 +30,9 @@ const waitForPayment = async () => {
   if (val > 0) {
     sendMoneySignal(val);
     return res.data;
+  } else {
+    // send to close pin
+    sendMoneySignal(0);
   }
 
   writeSuccessLog(`Id: ${res.data.id} Amount: ${res.data.amount}`);

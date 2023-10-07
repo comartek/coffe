@@ -8,6 +8,8 @@ const PIN = 12;
 const PULSE_WIDTH = 25; // ms
 const TIMEOUT_TO_END_COMMAND = PULSE_WIDTH * 10;
 
+rpio.close(PIN);
+
 /**
  *
  * @param {*} status
@@ -19,6 +21,10 @@ const sendStatusSignal = (status) => {
 
 const sendMoneySignal = async (val) => {
   console.log("val=>>>>>>>>>>>>>>>>>>>", val);
+  if (val == 0) {
+    rpio.close(PIN);
+    return;
+  }
   rpio.open(PIN, rpio.OUTPUT, rpio.LOW);
   rpio.msleep(TIMEOUT_TO_END_COMMAND);
 
