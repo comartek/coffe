@@ -20,7 +20,7 @@ const FUNC_KEY = () => jwt.sign(
   }
 );
 
-const ENDPOINT = "https://api-cafe-dev.viziple.com";
+const ENDPOINT = "https://api-cafe.viziple.com";
 // const ENDPOINT = "http://localhost:3456";
 const REQUEST_TIMEOUT = 3000;
 const TIMEOUT_TO_DELAY_WHEN_ERROR = 500;

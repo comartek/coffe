@@ -1,12 +1,12 @@
 {
   "name": "porter",
-  "version": "0.1.1",
+  "version": "0.1.11",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
     "es:build": "esbuild index.js --bundle --outfile=dist/out.js --platform=node --packages=external",
-    "build": "npm run es:build && javascript-obfuscator dist/out.js --compact true --output ../coffee-app/app.js && rm dist/out.js"
+    "build": "npm run es:build && javascript-obfuscator dist/out.js --compact true --output ../coffee-app/app.js && rm dist/out.js && node scripts/update-app.js"
   },
   "dependencies": {
     "async-mutex": "0.4.0",
@@ -18,9 +18,7 @@
     "mkdirp": "3.0.1",
     "nanoid": "3",
     "node-cron": "3.0.2",
-    "node-machine-id": "1.1.12",
-    "rpio": "2.4.2",
-    "tx2": "1.0.5"
+    "rpio": "2.4.2"
   },
   "devDependencies": {
     "esbuild": "0.19.3",

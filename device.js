@@ -51,7 +51,7 @@ const sendMoneySignal = async (val) => {
 };
 
 let callbackOnPay = (value) => {
-  console.log("report value");
+  console.log("report value", value);
 };
 let counterPollLow = 0;
 
